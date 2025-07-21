@@ -491,7 +491,14 @@ class ProductService
     public function createSize(Product $product)
     {
         // lấy ra những kích thước có thể thêm
-        $productSizes = ProductSize::select('products_size.id as id', 'sizes.name as size_name', 'colors.name as color_name', 'products_size.quantity as quanity')
+        $productSizes = ProductSize::select(
+            'products_size.id as id',
+            'sizes.name as size_name',
+            'colors.name as color_name',
+            'products_size.quantity as quanity',
+            'products_size.price_sell',
+            'products_size.price_import'
+        )
         ->join('products_color', 'products_color.id', '=', 'products_size.product_color_id')
         ->join('sizes', 'sizes.id', '=', 'products_size.size_id')
         ->join('colors', 'colors.id', '=', 'products_color.color_id')
@@ -532,6 +539,8 @@ class ProductService
         $data = [
             'quantity' => $productSize->quantity,
             'size' => $productSize->size->name,
+            'price_sell' => $productSize->price_sell,
+            'price_import' => $productSize->price_import,
         ];
         return response()->json($data, 200);
     }
@@ -543,6 +552,8 @@ class ProductService
             'size_id' => $request->size_id,
             'product_color_id' => $request->product_color_id,
             'quantity' => $request->quantity,
+            'price_sell' => $request->price_sell,
+            'price_import' => $request->price_import,
         ]);
         Session::flash('success', 'Thêm kích thước thành công');
         

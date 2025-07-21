@@ -28,6 +28,8 @@
 									<th>Tên Kích Thước</th>
 									<th>Màu</th>
 									<th>Số lượng</th>
+									<th>Giá bán</th>
+									<th>Giá nhập</th>
 									<th>Thao Tác</th>
 								</tr>
 							</thead>
@@ -38,6 +40,8 @@
 										<td>{{ $productSize->size_name }}</td>
 										<td>{{ $productSize->color_name }}</td>
 										<td>{{ $productSize->quanity }}</td>
+										<td>{{ number_format($productSize->price_sell, 0, ',', '.') }}</td>
+										<td>{{ number_format($productSize->price_import, 0, ',', '.') }}</td>
 										<td>
 											<button class="btn btn-primary edit" 
 												url-update="{{ route('admin.update_size_product', [$productSize->id, $product->id]) }}"
@@ -91,6 +95,12 @@
 					<x-admin-input-prepend label="Số lượng" width="auto">
 						<input id="quantity" type="number" min="0" name="quantity"class="form-control">
 					</x-admin-input-prepend>
+                    <x-admin-input-prepend label="Giá bán" width="auto">
+                        <input id="price_sell" type="number" min="0" name="price_sell" class="form-control">
+                    </x-admin-input-prepend>
+                    <x-admin-input-prepend label="Giá nhập" width="auto">
+                        <input id="price_import" type="number" min="0" name="price_import" class="form-control">
+                    </x-admin-input-prepend>
 				</div>
 				<div class="modal-footer justify-content-between">
 					<button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">Đóng</button>

@@ -14,6 +14,7 @@ $(document).ready(function () {
 
   //edit size product
   $(document).on('click', '.edit', function () {
+    // alert('edit')
     $('#loading__js').css('display', 'flex');
     let url = $(this).attr('url-update');
     let urlGetSize = $(this).attr('url-get-size');
@@ -24,28 +25,36 @@ $(document).ready(function () {
           url-store="${url}"
           >
             <div class="modal-body">
-              <div class="form-group">
-                  <div class="form-group col-12">
-                      <div class="input-group">
-                          <div class="input-group-prepend" style="width:auto;">
-                              <span class="input-group-text" style="width:100%;">Màu Sắc</span>
-                          </div>
-                          <select class="form-control" name="size_id" id="size_id_edit">
-
-                          </select>
+              <div class="form-group col-12">
+                  <div class="input-group">
+                      <div class="input-group-prepend" style="width:auto;">
+                          <span class="input-group-text" style="width:100%;">Kích Thước</span>
                       </div>
-                      <!-- /.input group -->
+                      <input class="form-control" id="size_name_edit" name="size_name" readonly>
                   </div>
               </div>
-              <div class="form-group">
-                  <div class="form-group col-12">
-                      <div class="input-group">
-                          <div class="input-group-prepend" style="width:auto;">
-                              <span class="input-group-text" style="width:100%;">Màu Sắc</span>
-                          </div>
-                          <input id="quantity_edit" type="number" min="0" name="quantity"class="form-control">
+              <div class="form-group col-12">
+                  <div class="input-group">
+                      <div class="input-group-prepend" style="width:auto;">
+                          <span class="input-group-text" style="width:100%;">Số lượng</span>
                       </div>
-                      <!-- /.input group -->
+                      <input id="quantity_edit" type="number" min="0" name="quantity" class="form-control">
+                  </div>
+              </div>
+              <div class="form-group col-12">
+                  <div class="input-group">
+                      <div class="input-group-prepend" style="width:auto;">
+                          <span class="input-group-text" style="width:100%;">Giá bán</span>
+                      </div>
+                      <input id="price_sell_edit" type="number" min="0" name="price_sell" class="form-control">
+                  </div>
+              </div>
+              <div class="form-group col-12">
+                  <div class="input-group">
+                      <div class="input-group-prepend" style="width:auto;">
+                          <span class="input-group-text" style="width:100%;">Giá nhập</span>
+                      </div>
+                      <input id="price_import_edit" type="number" min="0" name="price_import" class="form-control">
                   </div>
               </div>
             </div>
@@ -123,9 +132,10 @@ function getSizeByProductColorEdit(url)
         type: 'GET',
         url: url,
     }).done((res) => {
-      let option = `<option>${res.size}</option>`;
-      $(`#size_id_edit`).html(option)
+      $('#size_name_edit').val(res.size);
       $('#quantity_edit').val(res.quantity);
+      $('#price_sell_edit').val(res.price_sell);
+      $('#price_import_edit').val(res.price_import);
       $('#loading__js').css('display', 'none');
       $('#modal-edit').modal('show');
     })

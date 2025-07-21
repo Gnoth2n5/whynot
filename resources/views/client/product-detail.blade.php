@@ -45,6 +45,7 @@
             </div>
             <span class="price mb_20">
               <span class="amount">{{ format_number_to_money($product->price_sell) }} VNĐ</span>
+              <span id="dynamic-price" style="font-weight:bold;color:#e74c3c;margin-left:10px;"></span>
             </span>
             <hr>
             <ul class="list-unstyled product_info mtb_20">

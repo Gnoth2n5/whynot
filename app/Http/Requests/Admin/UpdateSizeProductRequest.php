@@ -25,6 +25,8 @@ class UpdateSizeProductRequest extends FormRequest
     {
         return [
             'quantity' => 'required|integer|min:1',
+            'price_sell' => 'nullable|numeric|min:0',
+            'price_import' => 'nullable|numeric|min:0',
         ];
     }
 
@@ -37,6 +39,10 @@ class UpdateSizeProductRequest extends FormRequest
     {
         return [
             'quantity.required' => __('message.required', ['attribute' => 'Số lượng']),
+            'price_sell.numeric' => 'Giá bán phải là số',
+            'price_sell.min' => 'Giá bán phải lớn hơn hoặc bằng 0',
+            'price_import.numeric' => 'Giá nhập phải là số',
+            'price_import.min' => 'Giá nhập phải lớn hơn hoặc bằng 0',
         ];
     }
 }
