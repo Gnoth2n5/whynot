@@ -44,7 +44,7 @@
               <x-avg-stars :number="$avgRating" />
             </div>
             <span class="price mb_20">
-              <span class="amount">{{ format_number_to_money($product->price_sell) }} VNĐ</span>
+              <span class="amount" id="amount-default" data-default="{{ format_number_to_money($product->price_sell) }} VNĐ">{{ format_number_to_money($product->price_sell) }} VNĐ</span>
               <span id="dynamic-price" style="font-weight:bold;color:#e74c3c;margin-left:10px;"></span>
             </span>
             <hr>

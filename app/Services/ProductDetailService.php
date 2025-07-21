@@ -64,7 +64,7 @@ class ProductDetailService
         $productsize = DB::table('products_color')
             ->join('products_size', 'products_size.product_color_id', 'products_color.id')
             ->join('sizes', 'sizes.id', 'products_size.size_id')
-            ->select('sizes.name as size_name', 'products_size.id as product_size_id', 'products_color.id as product_color_id', 'products_size.quantity')
+            ->select('sizes.name as size_name', 'products_size.id as product_size_id', 'products_color.id as product_color_id', 'products_size.quantity', 'products_size.price_sell', 'products_size.price_import')
             ->where('products_color.product_id', $product->id)
             ->whereNull('products_color.deleted_at')
             ->whereNull('products_size.deleted_at')

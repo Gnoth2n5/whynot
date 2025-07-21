@@ -1,22 +1,24 @@
 $(document).ready(function(){
+   console.log('product-detail.js loaded');
    let sizes = JSON.parse(jQuery('#data-size').attr('data-sizes'))
    let color = $('#data-color').val()
    showSize(color, sizes);
+   updateDynamicPrice();
    //lắng nghe sự thay đổi của màu sắc
    $(document).on('change', '#data-color', function(){
-      //lấy cái id màu sắc thay đổi
+      console.log('Color changed');
       let color = $('#data-color').val()
-      // gọi hàm showSize để hiển thị size và số lượng của size
       showSize(color, sizes);
+      updateDynamicPrice();
    })
 
    // lắng nghe sự thay đổi của size
    $(document).on('change', '#data-size', function(){
+      console.log('Size changed');
       let sizes = JSON.parse(jQuery('#data-size').attr('data-sizes'))
-      // lấy cái id kích thước vừa thay đổi
+      updateDynamicPrice();
       let productSizeId = $('#data-size').val();
       let dataColor = $('#data-color').val()
-      // duyệt qua mảng kích thước và hiển thị số lượng của kích thước đó
       sizes.forEach(element => {
          if (element.product_color_id == dataColor && element.product_size_id == productSizeId) {
             $('#quantity_remain').val(element.quantity)
@@ -38,8 +40,8 @@ $(document).ready(function(){
    })
  })
 
- function showSize(color, sizes)
- {
+function showSize(color, sizes)
+{
    let option = '';
    sizes.forEach(element => {
     if (element.product_color_id == color) {
@@ -60,4 +62,24 @@ function showQuantity(sizes)
          $('#quantity_remain').val(element.quantity)
       }
      });
+}
+
+function updateDynamicPrice() {
+   let sizes = JSON.parse(jQuery('#data-size').attr('data-sizes'));
+   let productSizeId = $('#data-size').val();
+   let dataColor = $('#data-color').val();
+   let found = false;
+   sizes.forEach(element => {
+      if (element.product_color_id == dataColor && element.product_size_id == productSizeId) {
+         if (element.price_sell && element.price_sell > 0) {
+            console.log('Dynamic price found:', element.price_sell);
+            $('.amount').text(element.price_sell.toLocaleString('vi-VN') + ' VNĐ');
+            found = true;
+         }
+      }
+   });
+   if (!found) {
+      console.log('No dynamic price');
+      $('.amount').text($('#amount-default').data('default'));
+   }
 }
