@@ -13,7 +13,14 @@ use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+
+Route::get('get-password', function (){
+    return Hash::make('12345678');
+});
+
+
 
 Route::middleware(['maintenance_active'])->group(function () {
     //Hiển thị trang bảo trì website
@@ -51,7 +58,9 @@ Route::middleware(['maintenance'])->group(function () {
             //FE: Trang thanh toán
             Route::get('/', [CheckOutController::class, 'index'])->name('checkout.index');
             Route::post('/', [CheckOutController::class, 'store']);
+            Route::post('/apply-voucher', [CheckOutController::class, 'applyVoucher'])->name('checkout.apply_voucher');
             Route::get('/callback-momo', [CheckOutController::class, 'callbackMomo'])->name('checkout.callback_momo');
+            Route::post('/api-apply-voucher', [CheckOutController::class, 'apiApplyVoucher'])->name('checkout.api_apply_voucher');
         });
     
         Route::group(['prefix' => 'profile'], function(){

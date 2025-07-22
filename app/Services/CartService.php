@@ -7,6 +7,7 @@ use App\Repository\Eloquent\ProductSizeRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Darryldecode\Cart\Facades\CartFacade as Cart;
 
 class CartService
 {
@@ -27,7 +28,8 @@ class CartService
     public function index()
     {
         try {
-            return ['carts' => \Cart::getContent(), 'fee' => $this->getTransportFee()];
+            // Tạm thời bỏ qua phí vận chuyển, trả về 0
+            return ['carts' => Cart::getContent(), 'fee' => 0];
         } catch (\Exception){
             return [];
         }
@@ -42,7 +44,7 @@ class CartService
             return redirect()->route('user.home');
         }
         // lấy toàn bộ sản phẩm có trong giỏ hàng
-        $carts = \Cart::getContent()->toArray();
+        $carts = Cart::getContent()->toArray();
         //Nếu giỏ hàng không rỗng và kiểm tra xem sản phẩm được thêm có tồn tại trong giỏ hàng chưa
         if (! empty($carts) && array_key_exists($request->id, $carts)) {
             // khi thêm vào nếu số lượng vượt quá trong kho thì sẽ báo lỗi
@@ -56,7 +58,7 @@ class CartService
             return back()->with('error', TextSystemConst::ADD_CART_ERROR_QUANTITY);
         }
         // thêm sản phẩm vào giỏ hàng hoặc cập số lượng nếu như sản phảm đó đã tồn trong giỏ hàng
-        \Cart::add([
+        Cart::add([
             'id' => $request->id,
             'name' => $product->product_name,
             'price' => $product->product_price_sell,
@@ -86,7 +88,7 @@ class CartService
         }
 
         // cập nhật lại số lượng trong kho
-        \Cart::update(
+        Cart::update(
             $request->id,
             [
                 'quantity' => [
@@ -102,14 +104,14 @@ class CartService
 
     public function delete($id)
     {
-        \Cart::remove($id);
+        Cart::remove($id);
 
         return redirect()->route('cart.index');
     }
 
     public function clearAllCart()
     {
-        \Cart::clear();
+        Cart::clear();
 
         return redirect()->route('cart.index');
     }

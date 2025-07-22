@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Services\CheckOutService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Darryldecode\Cart\Facades\CartFacade as Cart;
 
 class CheckOutController extends Controller
 {
@@ -32,7 +33,7 @@ class CheckOutController extends Controller
     public function index()
     {
         // nếu giỏ hàng trống thì không cho vào trang thanh toán
-        if (count(\Cart::getContent()) <= 0) {
+        if (count(Cart::getContent()) <= 0) {
             return back();
         }
         // trả về cho phía khách hàng
@@ -72,4 +73,45 @@ class CheckOutController extends Controller
         return $this->checkOutService->callbackMomo($request);
     }
 
+    public function applyVoucher(Request $request)
+    {
+        $code = $request->input('voucher_code');
+        $voucher = \App\Models\Voucher::where('code', $code)->first();
+        if (!$voucher) {
+            return redirect()->back()->with('voucher_message', 'Mã voucher không tồn tại!');
+        }
+        if (!$voucher->isValid()) {
+            return redirect()->back()->with('voucher_message', 'Voucher đã hết hạn hoặc đã sử dụng hết!');
+        }
+        // Lưu voucher vào session để áp dụng khi thanh toán
+        session(['applied_voucher' => $voucher->code]);
+        return redirect()->back()->with('voucher_message', 'Áp dụng voucher thành công!');
+    }
+
+    public function apiApplyVoucher(Request $request)
+    {
+        $code = $request->input('voucher_code');
+        $total = $request->input('total');
+        $voucher = \App\Models\Voucher::where('code', $code)->first();
+        if (!$voucher) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mã voucher không tồn tại!',
+            ]);
+        }
+        if (!$voucher->isValid()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher đã hết hạn hoặc đã sử dụng hết!',
+            ]);
+        }
+        $discount = $voucher->applyDiscount($total);
+        $newTotal = max(0, $total - $discount);
+        return response()->json([
+            'success' => true,
+            'message' => 'Áp dụng voucher thành công!',
+            'discount' => $discount,
+            'new_total' => $newTotal,
+        ]);
+    }
 }
