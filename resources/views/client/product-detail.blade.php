@@ -12,6 +12,54 @@
   .rating .fa-star{
     color: #b1b1b1;
   }
+  
+  /* Quantity input styling */
+  .quantity-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .quantity-btn {
+    background: #f8f9fa;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    transition: background-color 0.3s;
+  }
+  
+  .quantity-btn:hover {
+    background: #e9ecef;
+  }
+  
+  .quantity-btn:active {
+    background: #dee2e6;
+  }
+  
+  .quantity-input {
+    flex: 1;
+    border: none;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .quantity-input::-webkit-inner-spin-button,
+  .quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  .quantity-input[type=number] {
+    -moz-appearance: textfield;
+  }
 </style>
 <div class="container">
     <div class="row ">
@@ -88,7 +136,11 @@
                     </div>
                     <div class="Color col-md-3">
                       <label>Số lượng</label>
-                      <input name="quantity" min="1" value="1" type="number">
+                      <div class="quantity-wrapper">
+                        <button type="button" class="quantity-btn minus" onclick="decreaseQuantity()">-</button>
+                        <input name="quantity" min="1" value="1" type="number" id="quantity-input" class="quantity-input">
+                        <button type="button" class="quantity-btn plus" onclick="increaseQuantity()">+</button>
+                      </div>
                     </div>
                     <div class="Color col-md-3">
                       <label>Số lượng Còn</label>
@@ -245,4 +297,31 @@
     </div>
   </div>
 @vite(['resources/client/js/product-detail.js', 'resources/client/css/product-review.css'])
+
+<script>
+function increaseQuantity() {
+  const input = document.getElementById('quantity-input');
+  const currentValue = parseInt(input.value) || 1;
+  input.value = currentValue + 1;
+}
+
+function decreaseQuantity() {
+  const input = document.getElementById('quantity-input');
+  const currentValue = parseInt(input.value) || 1;
+  if (currentValue > 1) {
+    input.value = currentValue - 1;
+  }
+}
+
+// Đảm bảo giá trị không nhỏ hơn 1 khi người dùng nhập trực tiếp
+document.addEventListener('DOMContentLoaded', function() {
+  const input = document.getElementById('quantity-input');
+  input.addEventListener('change', function() {
+    const value = parseInt(this.value) || 1;
+    if (value < 1) {
+      this.value = 1;
+    }
+  });
+});
+</script>
 @endsection
